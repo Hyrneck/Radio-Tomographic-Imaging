@@ -1,0 +1,52 @@
+close
+clear
+clc
+
+AAA = [-58 -59 -64 -65 -67; -63 -60 -61 -60 -65;-65 -65 -61 -62 -65;-60 -63 -62 -63 -62; -62 -61 -58 -57 -57]; % Synthetic data
+%AAA = 10.^((AAAA - 30)/10);
+AAAAA = [-50 -60 -53 -54 ; -62 -53 -53 -52 ; -64 -60 -50 -55 ; -63 -58 -57 -58 ];
+AA = (AAAAA./-94).*100;
+A = magic(10);
+x = zeros(size(AA,1));
+y = zeros(size(AA,1));
+
+nn = 1;
+for i=1:size(AA,1)
+    for j=1:size(AA,2)
+        [x(:,nn) , y(:,nn)] = Bresenham(i,1,j,size(AA,1));
+        
+        nn = nn+1;
+    end
+end
+disp(x)
+disp(y)
+
+z = [x(:),y(:)];
+disp(z)
+
+[r, c] = (size(AA));
+OutMat = zeros(size(AA,1));
+
+for i = 1:r
+    for j = 1:c
+        Temp = nnz(z(:, 1) == i & z(:, 2) == j);
+        OutMat(i,j) = Temp;
+    end
+end
+disp(OutMat)
+
+A2 = reshape(AA,1,r*c);
+AT = AA';
+
+B = zeros(size(AA));
+for r = 1:size(AA,1)
+    for c = 1:size(AA,2)
+        idx = find(all(z == [r,c],2));
+        B(c,r) = sum(AT(ceil(idx/size(AA,1))));
+    end
+end
+disp(B)
+
+D = (B)./(OutMat');
+disp(D)
+image(D)
